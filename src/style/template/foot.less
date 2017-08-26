@@ -1,0 +1,36 @@
+.foot {
+  border-top: 1px solid @lineColor;
+  padding: 0;
+  margin: 0;
+  position: fixed;
+  bottom: 0;
+  height: 40px;
+  line-height: 40px;
+  left: 0;
+  right: 0;
+  font-size: 0;
+  li {
+    font-size: 20px;
+    width: 33.33%;
+    color: @muteColor;
+    &.select {
+      background-color: @highlightBgColor;
+      color: @highlightColor;
+    }
+  }
+  .icon-document {
+    background-image: url(../image/document.png);
+    width: 25px;
+    height: 21px;
+  }
+  .icon-search {
+    background-image: url(../image/search.png);
+    width: 24px;
+    height: 24px;
+  }
+  .icon-my {
+    background-image: url(../image/my.png);
+    width: 23px;
+    height: 25px;
+  }
+}

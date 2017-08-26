@@ -1,0 +1,87 @@
+@import 'template/head.less';
+@import 'template/foot.less';
+@import 'template/positionList.less';
+@import 'property.less';
+.c{
+  color:#fff;
+}
+.ng-enter {
+  transition:0.5s linear all;
+  opacity:0;
+}
+
+.ng-enter-active {
+  opacity:1;
+}
+
+.fs(@px) {
+  font-size: unit(@px / 37.5, rem);
+}
+
+.w(@px) {
+  width: unit(@px / 37.5, rem);
+}
+
+.h(@px) {
+  height: unit(@px / 37.5, rem);
+}
+
+.lh(@px) {
+  line-height: unit(@px / 37.5, rem);
+}
+
+.mt(@px) {
+  margin-top: unit(@px / 37.5, rem);
+}
+.ml(@px) {
+  margin-top: unit(@px / 37.5, rem);
+}
+.mr(@px) {
+  margin-top: unit(@px / 37.5, rem);
+}
+.mb(@px) {
+  margin-top: unit(@px / 37.5, rem);
+}
+.pt(@px) {
+  padding-top: unit(@px / 37.5, rem);
+}
+.pl(@px) {
+  padding-left: unit(@px / 37.5, rem);
+}
+.pr(@px) {
+  padding-right: unit(@px / 37.5, rem);
+}
+.pb(@px) {
+  padding-bottom: unit(@px / 37.5, rem);
+}
+
+html,body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+}
+body, div, span, header, footer, nav, section, aside, article, ul, dl, dt, dd, li, a, p, h1, h2, h3, h4,h5, h6, i, b, textarea, button, input, select, figure, figcaption, {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    font-style: normal;
+    text-decoration: none;
+    border: none;
+    color: #333;
+    font-weight: normal;
+    font-family: "Microsoft Yahei";
+    box-sizing: border-box;
+    -webkit-tap-highlight-color:transparent;
+    -webkit-font-smoothing: antialiased;
+    &:hover{
+        outline: none;
+    }
+}
+body {
+  background-color: @bodyBgColor;
+  .fs(16);
+}
+button {
+  border-width: 0;
+  outline-width: 0;
+}

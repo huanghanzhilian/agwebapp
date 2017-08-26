@@ -1,0 +1,23 @@
+{
+    "success": true,
+    "object": {
+        "orderId": "1",
+        "statusDesc": "还剩3天4小时自动确认收货",
+        "payTime": "2017-08-08 14:52:27",
+        "goodsList": "[{\"orderGoodsId\":\"1\",\"goodsImg\":\"http://qgy-offline.oss-cn-beijing.aliyuncs.com/qgy/shareGoods/12_0.png\",\"goodsMoney\":\"2000\",\"orderId\":\"1\",\"goodsId\":\"33\",\"authorName\":\"陈立功\",\"authorId\":\"9\",\"goodsName\":\"美人捧心\",\"goodsNum\":\"2\"},{\"orderGoodsId\":\"2\",\"goodsImg\":\"http://qgy-offline.oss-cn-beijing.aliyuncs.com/qgy/shareGoods/120.png\",\"goodsMoney\":\"10000\",\"orderId\":\"1\",\"goodsId\":\"34\",\"authorName\":\"顾景舟\",\"authorId\":\"1\",\"goodsName\":\"浮屠\",\"goodsNum\":\"1\"}]",
+        "orderStatus": "3000",
+        "autoEndTime": "",
+        "receiverPhone": "13499999999",
+        "cityName": "北京市",
+        "province": "北京市",
+        "orderStatusStr": "待评价",
+        "goodsNum": "3",
+        "deliverTime": "2017-08-08 14:56:33",
+        "receiverName": "测试1",
+        "receiveTime": "2017-08-08 14:56:42",
+        "goodsMoney": "12000",
+        "createTime": "2017-08-08 14:38:23",
+        "cancelTime": "2017-08-08 14:56:42",
+        "detailAddress": "北京市昌平县城御路园10号楼6单元101"
+    }
+}
