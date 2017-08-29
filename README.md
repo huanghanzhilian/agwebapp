@@ -1,4 +1,18 @@
+#使用技术
+AngularJS + gulp + bower +less
 
+#项目运行
+
+```
+cnpm i -g bower(安装bower)
+
+bower install(安装第三方依赖)
+
+cnpm install
+
+gulp (运行)
+
+```
 
 # 项目布局
 
