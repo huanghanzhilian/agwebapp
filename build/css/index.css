@@ -82,6 +82,85 @@
   font-size: 0.32rem;
   line-height: 0.53333333rem;
 }
+.position-info {
+  border-bottom: 1px solid #ccc;
+  padding: 26px 10px 18px 10px;
+}
+.position-info .ml {
+  margin-left: 20px;
+}
+.position-info img {
+  right: 24px;
+  top: 40px;
+}
+.company-info {
+  min-height: 2rem;
+  padding: 10px 15px 1px 85px;
+}
+.company-info img {
+  width: 1.6rem;
+  height: 1.6rem;
+  left: 15px;
+}
+.company-info p {
+  margin-top: 0;
+}
+.position-class {
+  background-color: #fff;
+  border-top: 1px solid #d4d4d4;
+  padding: 13px 9px 5px 9px;
+}
+.position-class h5 {
+  margin: 0 0 35px 0;
+}
+.position-class button {
+  background-color: #def8f5;
+  border-radius: 20px;
+  padding: 10px 23px;
+  margin-right: 11px;
+}
+.position-class button.active {
+  background-color: #12d5b5;
+  color: #fff;
+}
+.position-class ul {
+  border-top: 1px solid #d4d4d4;
+  margin: 5px 0 0 0;
+  padding: 0;
+}
+.position-class ul li {
+  list-style: none;
+}
+.position-class ul li span {
+  color: red;
+  right: 10px;
+  top: 20px;
+}
+.bottom-btn {
+  position: fixed;
+  height: 1.2rem;
+  background-color: #12d5b5;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+}
+.position-desc {
+  margin-top: 10px;
+}
+.position-desc h5 {
+  font-size: 0.42666667rem;
+  border-bottom: 1px solid #ccc;
+  margin-top: 0;
+  padding-left: 10px;
+  height: 1.06666667rem;
+  line-height: 1.06666667rem;
+}
+.position-desc pre {
+  padding-left: 10px;
+  margin-left: 0;
+  padding-bottom: 20px;
+}
 .bg-w {
   background-color: #fff;
 }

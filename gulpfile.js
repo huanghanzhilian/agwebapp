@@ -5,6 +5,8 @@ var $=require('gulp-load-plugins')();//并且在方法后加上双扣号，表�
 //引入没有gulp开头的模块
 var open=require('open');
 
+var mockApi = require('./mockApi');
+
 
 
 //模块定义完成 来声明全局变量
