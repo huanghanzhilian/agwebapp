@@ -1,11 +1,9 @@
-#使用技术
-
+# 使用技术
 
 AngularJS + gulp + bower +less
 
 
-
-#项目运行
+# 项目运行
 
 
 ```
