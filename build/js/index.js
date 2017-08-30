@@ -4,8 +4,29 @@
  * angular.module  创建模块
  * 第一个参数为模块名称
  * 第二模块依赖
+ * run  方法初始化全局的数据 , 只对全局作用域起作用  如 $rootScope，局部的$scope不管用
+ * run 初始化执行 也就是说所有页面加载之前执行的
  */
-angular.module('app', ['ui.router']);
+angular.module('app', ['ui.router','ngCookies'])
+
+/*.run(['$rootScope',function($rootScope){
+	$rootScope.im=function(){
+		console.log('im')
+	}
+}]);*/
+'use strict';
+angular.module('app').value('dict', {}).run(['dict', '$http', function(dict, $http){
+  $http.get('data/city.json').success(function(resp){
+    dict.city = resp;
+  });
+  $http.get('data/salary.json').success(function(resp){
+    dict.salary = resp;
+  });
+  $http.get('data/scale.json').success(function(resp){
+    dict.scale = resp;
+  });
+}]);
+
 //严格模式
 'use strict';
 
@@ -37,6 +58,10 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function($
         url: '/company/:id',
         templateUrl: 'view/company.html',
         controller: 'companyCtrl'
+    }).state('search', {
+        url: '/search',
+        templateUrl: 'view/search.html',
+        controller: 'searchCtrl'
     });
 
 
@@ -50,14 +75,20 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function($
     $urlRouterProvider.otherwise('main');
 }]);
 'use strict';
-angular.module('app').controller('companyCtrl', ['$http', '$state', '$scope', function($http, $state, $scope){
-  $http.get('data/company.json?id='+$state.params.id).success(function(resp){
-    $scope.company = resp;
-  });
+angular.module('app').controller('companyCtrl', ['$http', '$state', '$scope', function($http, $state, $scope) {
+    $http.get('data/company.json?id=' + $state.params.id).success(function(resp) {
+        $scope.company = resp;
+        /*//向下广播abc事件
+        $scope.$broadcast('abc', { id: 1 });
+        //接收子元素广播事件
+        $scope.$on('cba', function(event, data) {
+            console.log(event,data);
+        });*/
+    });
 }]);
-
 'use strict';
 angular.module('app').controller('mainCtrl', ['$http', '$scope', function($http, $scope) {
+	//console.log($scope.$root);
     $http.get('data/positionList.json').success(function(resp) {
         $scope.list = resp;
     }).error(function(err){
@@ -74,12 +105,33 @@ angular.module('app').controller('mainCtrl', ['$http', '$scope', function($http,
  * @param  {[type]} $scope) {               $scope.isLogin [description]
  * @return {[type]}         [description]
  */
-angular.module('app').controller('positionCtrl', ['$log', '$q', '$http', '$state', '$scope', function($log, $q, $http, $state, $scope) {
+angular.module('app').controller('positionCtrl', ['$log', '$q','$timeout','$interval', '$http', '$state', '$scope', function($log, $q,$timeout,$interval, $http, $state, $scope) {
     $scope.isLogin = true;
     $scope.message = $scope.isLogin ? '投个简历' : '去登录';
-    //console.log($q.defer())
+    //console.dir($q)
+
     function getPosition() {
         var def = $q.defer();
+        /*
+         $http有四种请求方法 下面三种和另一种get
+         get是没有数据对象也就是请求体
+         get的参数可以也在地址栏里，
+         get参数可以写在他的第二个参数{params对象中}
+         $http['post'/'delete'/'put'].('url',{
+            //第二个参数
+            //数据对象，也就是说传入请求的body
+         },{
+            //第三个参数
+            //配置对象
+         })
+         如果以上四种都不能满足请求需求可以直接使用$http
+         $http({
+            url:'',//请求地址
+            method:'post',//方法
+            params:{},//地址栏参数
+            data:{}//请求body
+         })
+         */
         $http.get('data/position.json', {
             params: {
                 id: $state.params.id
@@ -100,6 +152,49 @@ angular.module('app').controller('positionCtrl', ['$log', '$q', '$http', '$state
         getCompany(obj.companyId);
     });
 
+
+
+    /*$q.all([aac(1),aac2(1)]).then(function(result) {
+        console.log(result)
+    })
+    $q.all({a:aac(1),b:aac2(1)}).then(function(result) {
+        console.log(result)
+    })
+    function aac(id) {
+        var def = $q.defer();
+        $http.get('data/company.json?id=' + id).success(function(resp) {
+            def.resolve(resp);
+            //$scope.company = resp;
+        })
+        return def.promise;
+    }
+    function aac2(id) {
+        var def2 = $q.defer();
+        $http.get('data/company.json?id=' + id).success(function(resp) {
+            def2.resolve(resp);
+            //$scope.company = resp;
+        })
+        return def2.promise;
+    }*/
+
+    /*$timeout(function(){
+        console.log("我是延迟")
+    },1000);
+
+    $interval(function(){
+        console.log("我是循环")
+    },1000)*/
+
+    //调用$rootScope
+    //$scope.im();
+
+
+    //使用cache 为cookies增删查
+    //cache.put('to','day')
+    //删除
+    //cache.remove('to');
+
+
     function getCompany(id) {
         $http.get('data/company.json?id=' + id).success(function(resp) {
             $scope.company = resp;
@@ -117,6 +212,63 @@ angular.module('app').controller('positionCtrl', ['$log', '$q', '$http', '$state
             } else {
                 $state.go('login');
             }
+        }
+    }
+}]);
+'use strict';
+angular.module('app').controller('searchCtrl', ['dict', '$http', '$scope', function(dict, $http, $scope) {
+    $scope.name = '';
+    //查询方法函数
+    $scope.search = function() {
+        $http.get('data/positionList.json?name=' + $scope.name).success(function(resp) {
+            $scope.positionList = resp;
+        });
+    };
+    $scope.search();
+    $scope.sheet = {};
+    $scope.tabList = [{
+        id: 'city',
+        name: '城市'
+    }, {
+        id: 'salary',
+        name: '薪水'
+    }, {
+        id: 'scale',
+        name: '公司规模'
+    }];
+    $scope.filterObj = {};
+    var tabId = '';
+    $scope.tClick = function(id, name) {
+        tabId = id;
+        $scope.sheet.list = dict[id];
+        $scope.sheet.visible = true;
+    };
+    $scope.sClick = function(id, name) {
+        if (id) {
+            angular.forEach($scope.tabList, function(item) {
+                if (item.id === tabId) {
+                    item.name = name;
+                }
+            });
+            $scope.filterObj[tabId + 'Id'] = id;
+        } else {
+            delete $scope.filterObj[tabId + 'Id'];
+            angular.forEach($scope.tabList, function(item) {
+                if (item.id === tabId) {
+                    switch (item.id) {
+                        case 'city':
+                            item.name = '城市';
+                            break;
+                        case 'salary':
+                            item.name = '薪水';
+                            break;
+                        case 'scale':
+                            item.name = '公司规模';
+                            break;
+                        default:
+                    }
+                }
+            });
         }
     }
 }]);
@@ -142,22 +294,27 @@ angular.module('app').directive('appFoot', [function(){
 }]);
 
 'use strict';
-angular.module('app').directive('appHeadBar', [function(){
-  return {
-    restrict: 'A',
-    replace: true,
-    templateUrl: 'view/template/headBar.html',
-    scope: {
-      text: '@'
-    },
-    link: function($scope) {
-      $scope.back = function() {
-        window.history.back();
-      };
-    }
-  };
+angular.module('app').directive('appHeadBar', [function() {
+    return {
+        restrict: 'A',
+        replace: true,
+        templateUrl: 'view/template/headBar.html',
+        scope: {
+            text: '@'
+        },
+        link: function($scope) {
+            $scope.back = function() {
+                window.history.back();
+            };
+            /*//接收父级广播事件
+            $scope.$on('abc', function(event,data) {
+                console.log(event,data);
+            });
+            //向上广播事件
+            $scope.$emit('cba',{name:2});*/
+        }
+    };
 }]);
-
 'use strict';
 angular.module('app').directive('appHead', [function(){
   return {
@@ -269,3 +426,64 @@ angular.module('app').directive('appPositionList', [function() {
 /*link: function($scope,elm,attr,controller) {
     $scope.name = cache.get('name') || '';
 }*/
+'use strict';
+angular.module('app').directive('appSheet', [function(){
+  return {
+    restrict: 'A',
+    replace: true,
+    scope: {
+      list: '=',
+      visible: '=',
+      select: '&'
+    },
+    templateUrl: 'view/template/sheet.html'
+  };
+}]);
+
+'use strict';
+angular.module('app').directive('appTab', [function() {
+    return {
+        restrict: 'A',
+        replace: true,
+        scope: {
+            list: '=',
+            tabClick: '&'
+        },
+        templateUrl: 'view/template/tab.html',
+        link: function($scope) {
+            $scope.click = function(tab) {
+                $scope.selectId = tab.id;
+                $scope.tabClick(tab);
+            };
+        }
+    };
+}]);
+'use strict';
+angular.module('app').service('cache', ['$cookies', function($cookies){
+    this.put = function(key, value){
+      $cookies.put(key, value);
+    };
+    this.get = function(key) {
+      return $cookies.get(key);
+    };
+    this.remove = function(key) {
+      $cookies.remove(key);
+    };
+}]);
+
+/*.factory('cache', ['$cookies', function($cookies){
+	//服务工厂方式
+	//他的优势是在调用之前可以写私有属性  也就是这个服务内部属性，外部不可访问
+	//service是没有的
+	return {
+		put : function(key, value){
+	      $cookies.put(key, value);
+	    },
+	    get : function(key) {
+	      $cookies.get(key);
+	    },
+	    remove : function(key) {
+	      $cookies.remove(key);
+	    },
+	}
+}]);*/

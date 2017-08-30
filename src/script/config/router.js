@@ -29,6 +29,10 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function($
         url: '/company/:id',
         templateUrl: 'view/company.html',
         controller: 'companyCtrl'
+    }).state('search', {
+        url: '/search',
+        templateUrl: 'view/search.html',
+        controller: 'searchCtrl'
     });
 
 
