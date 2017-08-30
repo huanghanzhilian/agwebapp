@@ -1,7 +1,12 @@
 #使用技术
+
+
 AngularJS + gulp + bower +less
 
+
+
 #项目运行
+
 
 ```
 cnpm i -g bower(安装bower)
