@@ -408,18 +408,27 @@ angular.module("app").directive('appPositionInfo', ['$http', function($http) {
  * element
  * atter
  */
-angular.module('app').directive('appPositionList', [function() {
+angular.module('app').directive('appPositionList', ['$http',function($http) {
     return {
         restrict: 'A',
         replace: true,
         templateUrl: 'view/template/positionList.html',
         //transclude:true,
         scope: {
-            data: '='
+            data: '=',
+            filterObj: '=',
+            isFavorite: '='
         },
-        link: function($scope,elm,attr,controller) {
-		    //$scope.name = cache.get('name') || '';
-		}
+        link: function($scope, elm, attr, controller) {
+            $scope.select = function(item) {
+                $http.post('data/favorite.json', {
+                    id: item.id,
+                    select: !item.select
+                }).success(function(resp) {
+                    item.select = !item.select;
+                })
+            };
+        }
     };
 }]);
 
@@ -447,15 +456,33 @@ angular.module('app').directive('appTab', [function() {
         replace: true,
         scope: {
             list: '=',
-            tabClick: '&'
+            tabsClick: '&'
         },
         templateUrl: 'view/template/tab.html',
         link: function($scope) {
             $scope.click = function(tab) {
                 $scope.selectId = tab.id;
-                $scope.tabClick(tab);
+                $scope.tabsClick(tab);
             };
         }
+    };
+}]);
+'use strict';
+angular.module('app').filter('filterByObj', [function() {
+    return function(list, obj) {
+        var result = [];
+        angular.forEach(list, function(item) {
+            var isEqual = true;
+            for (var e in obj) {
+                if (item[e] !== obj[e]) {
+                    isEqual = false;
+                }
+            }
+            if (isEqual) {
+                result.push(item);
+            }
+        });
+        return result;
     };
 }]);
 'use strict';

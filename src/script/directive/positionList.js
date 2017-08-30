@@ -27,18 +27,27 @@
  * element
  * atter
  */
-angular.module('app').directive('appPositionList', [function() {
+angular.module('app').directive('appPositionList', ['$http',function($http) {
     return {
         restrict: 'A',
         replace: true,
         templateUrl: 'view/template/positionList.html',
         //transclude:true,
         scope: {
-            data: '='
+            data: '=',
+            filterObj: '=',
+            isFavorite: '='
         },
-        link: function($scope,elm,attr,controller) {
-		    //$scope.name = cache.get('name') || '';
-		}
+        link: function($scope, elm, attr, controller) {
+            $scope.select = function(item) {
+                $http.post('data/favorite.json', {
+                    id: item.id,
+                    select: !item.select
+                }).success(function(resp) {
+                    item.select = !item.select;
+                })
+            };
+        }
     };
 }]);
 

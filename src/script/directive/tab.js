@@ -5,13 +5,13 @@ angular.module('app').directive('appTab', [function() {
         replace: true,
         scope: {
             list: '=',
-            tabClick: '&'
+            tabsClick: '&'
         },
         templateUrl: 'view/template/tab.html',
         link: function($scope) {
             $scope.click = function(tab) {
                 $scope.selectId = tab.id;
-                $scope.tabClick(tab);
+                $scope.tabsClick(tab);
             };
         }
     };

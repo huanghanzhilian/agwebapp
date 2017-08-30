@@ -5,14 +5,44 @@
     "conpanyName": "前度",
     "city": "北京",
     "industry": "互联网",
-    "time": "2017-06-06"
+    "time": "2017-06-06",
+    "cityId": "c1",
+    "salaryId": "s1",
+    "scaleId": "s1"
 },
 {
     "id": "2",
     "name": "前端",
     "imgSrc": "image/item_image2.png",
     "conpanyName": "拉钩",
-    "city": "北京",
+    "city": "上海",
     "industry": "互联网",
-    "time": "2017-06-06"
+    "time": "2017-06-06",
+    "cityId": "c2",
+    "salaryId": "s2",
+    "scaleId": "s2"
+},
+{
+    "id": "3",
+    "name": "前端",
+    "imgSrc": "image/item_image7.png",
+    "conpanyName": "百度",
+    "city": "上海",
+    "industry": "互联网",
+    "time": "2017-06-06",
+    "cityId": "c3",
+    "salaryId": "s3",
+    "scaleId": "s3"
+},
+{
+    "id": "4",
+    "name": "前端",
+    "imgSrc": "image/item_image8.png",
+    "conpanyName": "车多网",
+    "city": "上海",
+    "industry": "互联网",
+    "time": "2017-06-06",
+    "cityId": "c4",
+    "salaryId": "s4",
+    "scaleId": "s4"
 }]
