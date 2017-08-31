@@ -27,6 +27,29 @@ angular.module('app').value('dict', {}).run(['dict', '$http', function(dict, $ht
   });
 }]);
 
+'use strict';
+angular.module('app').config(['$provide', function($provide){
+  $provide.decorator('$http', ['$delegate', '$q', function($delegate, $q){
+    $delegate.post = function(url, data, config) {
+      var def = $q.defer();
+      $delegate.get(url).success(function(resp) {
+        def.resolve(resp);
+      }).error(function(err) {
+        def.reject(err);
+      });
+      return {
+        success: function(cb){
+          def.promise.then(cb);
+        },
+        error: function(cb) {
+          def.promise.then(null, cb);
+        }
+      }
+    }
+    return $delegate;
+  }]);
+}]);
+
 //严格模式
 'use strict';
 
@@ -62,6 +85,26 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function($
         url: '/search',
         templateUrl: 'view/search.html',
         controller: 'searchCtrl'
+    }).state('login', {
+        url: '/login',
+        templateUrl: 'view/login.html',
+        controller: 'loginCtrl'
+    }).state('register', {
+        url: '/register',
+        templateUrl: 'view/register.html',
+        controller: 'registerCtrl'
+    }).state('me', {
+        url: '/me',
+        templateUrl: 'view/me.html',
+        controller: 'meCtrl'
+    }).state('post', {
+        url: '/post',
+        templateUrl: 'view/post.html',
+        controller: 'postCtrl'
+    }).state('favorite', {
+        url: '/favorite',
+        templateUrl: 'view/favorite.html',
+        controller: 'favoriteCtrl'
     });
 
 
@@ -87,6 +130,25 @@ angular.module('app').controller('companyCtrl', ['$http', '$state', '$scope', fu
     });
 }]);
 'use strict';
+angular.module('app').controller('favoriteCtrl', ['$http', '$scope', function($http, $scope){
+  $http.get('data/myFavorite.json').success(function(resp) {
+    $scope.list = resp;
+  });
+}]);
+
+'use strict';
+angular.module('app').controller('loginCtrl', ['cache', '$state', '$http', '$scope', function(cache, $state, $http, $scope){
+  $scope.submit = function() {
+    $http.post('data/login.json', $scope.user).success(function(resp){
+      cache.put('id',resp.id);
+      cache.put('name',resp.name);
+      cache.put('image',resp.image);
+      $state.go('main');
+    });
+  }
+}]);
+
+'use strict';
 angular.module('app').controller('mainCtrl', ['$http', '$scope', function($http, $scope) {
 	//console.log($scope.$root);
     $http.get('data/positionList.json').success(function(resp) {
@@ -95,6 +157,20 @@ angular.module('app').controller('mainCtrl', ['$http', '$scope', function($http,
         console.log(err);
     });
 }]);
+'use strict';
+angular.module('app').controller('meCtrl', ['$state', 'cache', '$http', '$scope', function($state, cache, $http, $scope){
+  if(cache.get('name')) {
+    $scope.name = cache.get('name');
+    $scope.image = cache.get('image');
+  }
+  $scope.logout = function() {
+    cache.remove('id');
+    cache.remove('name');
+    cache.remove('image');
+    $state.go('main');
+  };
+}]);
+
 'use strict';
 /**
  * [description]
@@ -215,6 +291,66 @@ angular.module('app').controller('positionCtrl', ['$log', '$q','$timeout','$inte
         }
     }
 }]);
+'use strict';
+angular.module('app').controller('postCtrl', ['$http', '$scope', function($http, $scope){
+  $scope.tabList = [{
+    id: 'all',
+    name: '全部'
+  }, {
+    id: 'pass',
+    name: '面试邀请'
+  }, {
+    id: 'fail',
+    name: '不合适'
+  }];
+  $http.get('data/myPost.json').success(function(res){
+    $scope.positionList = res;
+  });
+  $scope.filterObj = {};
+  $scope.tClick = function(id, name) {
+    switch (id) {
+      case 'all':
+        delete $scope.filterObj.state;
+        break;
+      case 'pass':
+        $scope.filterObj.state = '1';
+        break;
+      case 'fail':
+        $scope.filterObj.state = '-1';         
+        break;
+      default:
+
+    }
+  }
+}]);
+
+'use strict';
+angular.module('app').controller('registerCtrl', ['$interval', '$http', '$scope', '$state', function($interval, $http, $scope, $state){
+  $scope.submit = function() {
+    $http.post('data/regist.json',$scope.user).success(function(resp){
+      $state.go('login');
+    });
+  };
+  var count = 60;
+  $scope.send = function() {
+    $http.get('data/code.json').success(function(resp){
+      if(1===resp.state) {
+        count = 60;
+        $scope.time = '60s';
+        var interval = $interval(function() {
+          if(count<=0) {
+            $interval.cancel(interval);
+            $scope.time = '';
+          } else {
+            count--;
+            $scope.time = count + 's';
+          }
+        }, 1000);
+      }
+    });
+  }
+}]);
+
 'use strict';
 angular.module('app').controller('searchCtrl', ['dict', '$http', '$scope', function(dict, $http, $scope) {
     $scope.name = '';
