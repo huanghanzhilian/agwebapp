@@ -36,7 +36,7 @@ angular.module('app').directive('appPositionList', ['$http',function($http) {
         scope: {
             data: '=',
             filterObj: '=',
-            isFavorite: '='
+            isFavorite: '=',
         },
         link: function($scope, elm, attr, controller) {
             $scope.select = function(item) {

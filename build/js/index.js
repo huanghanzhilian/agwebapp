@@ -360,8 +360,13 @@ angular.module('app').controller('searchCtrl', ['dict', '$http', '$scope', funct
             $scope.positionList = resp;
         });
     };
+    //初始化查询
     $scope.search();
+
+    //弹出层对象
     $scope.sheet = {};
+
+    //选择标签
     $scope.tabList = [{
         id: 'city',
         name: '城市'
@@ -372,13 +377,22 @@ angular.module('app').controller('searchCtrl', ['dict', '$http', '$scope', funct
         id: 'scale',
         name: '公司规模'
     }];
+
     $scope.filterObj = {};
+
+    //获取tab的id
     var tabId = '';
+
+    //定义方法 筛选
     $scope.tClick = function(id, name) {
         tabId = id;
+        //得到弹出层数组
         $scope.sheet.list = dict[id];
+        //将弹出层状态为true
         $scope.sheet.visible = true;
     };
+
+    //点击弹出层item事件
     $scope.sClick = function(id, name) {
         if (id) {
             angular.forEach($scope.tabList, function(item) {
@@ -407,6 +421,54 @@ angular.module('app').controller('searchCtrl', ['dict', '$http', '$scope', funct
             });
         }
     }
+}]);
+'use strict';
+angular.module('app').service('cache', ['$cookies', function($cookies){
+    this.put = function(key, value){
+      $cookies.put(key, value);
+    };
+    this.get = function(key) {
+      return $cookies.get(key);
+    };
+    this.remove = function(key) {
+      $cookies.remove(key);
+    };
+}]);
+
+/*.factory('cache', ['$cookies', function($cookies){
+	//服务工厂方式
+	//他的优势是在调用之前可以写私有属性  也就是这个服务内部属性，外部不可访问
+	//service是没有的
+	return {
+		put : function(key, value){
+	      $cookies.put(key, value);
+	    },
+	    get : function(key) {
+	      $cookies.get(key);
+	    },
+	    remove : function(key) {
+	      $cookies.remove(key);
+	    },
+	}
+}]);*/
+
+'use strict';
+angular.module('app').filter('filterByObj', [function() {
+    return function(list, obj) {
+        var result = [];
+        angular.forEach(list, function(item) {
+            var isEqual = true;
+            for (var e in obj) {
+                if (item[e] !== obj[e]) {
+                    isEqual = false;
+                }
+            }
+            if (isEqual) {
+                result.push(item);
+            }
+        });
+        return result;
+    };
 }]);
 'use strict';
 angular.module('app').directive('appCompany', [function(){
@@ -553,7 +615,7 @@ angular.module('app').directive('appPositionList', ['$http',function($http) {
         scope: {
             data: '=',
             filterObj: '=',
-            isFavorite: '='
+            isFavorite: '=',
         },
         link: function($scope, elm, attr, controller) {
             $scope.select = function(item) {
@@ -577,9 +639,9 @@ angular.module('app').directive('appSheet', [function(){
     restrict: 'A',
     replace: true,
     scope: {
-      list: '=',
-      visible: '=',
-      select: '&'
+      list: '=',//得到弹出层数据列表
+      visible: '=',//得到弹出层状态
+      select: '&'//点击弹出层item事件
     },
     templateUrl: 'view/template/sheet.html'
   };
@@ -592,61 +654,16 @@ angular.module('app').directive('appTab', [function() {
         replace: true,
         scope: {
             list: '=',
-            tabsClick: '&'
+            tabsClick: '&',
         },
         templateUrl: 'view/template/tab.html',
         link: function($scope) {
+            $scope.selectId='all';
             $scope.click = function(tab) {
+                //console.log($scope.selectId)
                 $scope.selectId = tab.id;
                 $scope.tabsClick(tab);
             };
         }
     };
 }]);
-'use strict';
-angular.module('app').filter('filterByObj', [function() {
-    return function(list, obj) {
-        var result = [];
-        angular.forEach(list, function(item) {
-            var isEqual = true;
-            for (var e in obj) {
-                if (item[e] !== obj[e]) {
-                    isEqual = false;
-                }
-            }
-            if (isEqual) {
-                result.push(item);
-            }
-        });
-        return result;
-    };
-}]);
-'use strict';
-angular.module('app').service('cache', ['$cookies', function($cookies){
-    this.put = function(key, value){
-      $cookies.put(key, value);
-    };
-    this.get = function(key) {
-      return $cookies.get(key);
-    };
-    this.remove = function(key) {
-      $cookies.remove(key);
-    };
-}]);
-
-/*.factory('cache', ['$cookies', function($cookies){
-	//服务工厂方式
-	//他的优势是在调用之前可以写私有属性  也就是这个服务内部属性，外部不可访问
-	//service是没有的
-	return {
-		put : function(key, value){
-	      $cookies.put(key, value);
-	    },
-	    get : function(key) {
-	      $cookies.get(key);
-	    },
-	    remove : function(key) {
-	      $cookies.remove(key);
-	    },
-	}
-}]);*/

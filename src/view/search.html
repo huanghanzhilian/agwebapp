@@ -2,10 +2,19 @@
   <button ng-click="name='';search();">取消</button>
   <input ng-model="name" type="text" placeholder="搜索职位/公司/城市">
   <button ng-click="search();" class="ta-l">
-    搜索
+    搜索{{s}}
   </button>
 </div>
+<!-- tab s -->
 <div app-tab list="tabList" tabs-click="tClick(id,name)"></div>
+<!-- tab e -->
+
+<!-- 数据列表 s -->
 <div class="search-list" filter-obj="filterObj" app-position-list data="positionList"></div>
+<!-- 数据列表 e -->
+<!-- foot s -->
 <div app-foot></div>
+<!-- foot e -->
+<!-- 弹出层 s -->
 <div app-sheet select="sClick(id,name)" list="sheet.list" visible="sheet.visible"></div>
+<!-- 弹出层 e -->
